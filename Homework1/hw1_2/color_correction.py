@@ -60,7 +60,19 @@ def color_correction(img, ccm):
     #                                                                      #
     ########################################################################
     
-    
+    # matrix already solve
+    x, y, z = img.shape
+    output = np.zeros(img.shape)
+
+    # 我的
+    for i in range(x):
+        for j in range(y):
+            output[i,j] = np.dot(img[i,j], ccm)
+
+    # 後來嘗試出來的
+    #output = np.dot(img, cmm)
+    print()
+
 
     ########################################################################
     #                                                                      #

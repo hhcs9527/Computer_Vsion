@@ -19,8 +19,34 @@ def generate_wb_mask(img, pattern, fr, fb):
     #      blue channel position. Fill 1 into green channel position       #
     #      otherwise.                                                      #
     ########################################################################
-    
-    
+    H,W = img.shape
+    mask = np.ones((H,W))
+
+    if pattern == "BGGR":
+        pattern_code = [0,1]
+
+    elif pattern == "RGGB":
+        pattern_code = [0,0]
+
+    elif pattern == "GBRG":
+        pattern_code = [1,1]
+ 
+    elif pattern == "GRBG":
+        pattern_code = [1,0]
+
+    # Pattern_Code meaning, 
+    # Pattern_Code[0] find the position to find the R/B
+    # Pattern_Code[1] 決定哪裡要放 R
+    # 依序填入 R, B
+
+
+    for i in range(H):
+        for j in range(W):
+            if (i+j)%2 == pattern_code[0]:
+                if i%2 == pattern_code[1]:
+                    mask[i,j] = fr
+                else:
+                    mask[i,j] = fb
 
     ########################################################################
     #                                                                      #

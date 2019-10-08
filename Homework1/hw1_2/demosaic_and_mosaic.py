@@ -3,6 +3,7 @@ import numpy as np
 
 from demosaic_2004 import demosaicing_CFA_Bayer_Malvar2004
 
+
 def mosaic(img, pattern):
     '''
     Input:
@@ -23,7 +24,38 @@ def mosaic(img, pattern):
     #        (since upper left pixel is B in BGGR bayer pattern)           #
     ########################################################################
 
-    
+    # input image 3 channel -> Red, Green, Blue
+    # 因為mosiac過程類只因為pattern不同所以放入方式不同, 先判斷格式, 再做
+
+    if pattern == "BGGR":
+        pattern_code = [0,1,0,2]
+
+    elif pattern == "RGGB":
+        pattern_code = [0,0,0,2]
+
+    elif pattern == "GBRG":
+        pattern_code = [1,1,0,2]
+ 
+    elif pattern == "GRBG":
+        pattern_code = [1,0,0,2]
+        
+    # Pattern_Code meaning, 
+    # Pattern_Code[0] find the position to find the R/B
+    # Pattern_Code[1] 決定哪邊要放 R
+    # Pattern_Code[2] 放 R
+    # Pattern_Code[3] 放 B
+
+    H,W,D = img.shape
+
+    output = img[:,:,1]
+    for i in range(H):
+        for j in range(W):
+            if (i+j)%2 == pattern_code[0]:
+                if i%2 == pattern_code[1]:
+                    output[i,j] = img[i,j,pattern_code[2]]
+                else:
+                    output[i,j] = img[i,j,pattern_code[3]]
+
     ########################################################################
     #                                                                      #
     #                           End of your code                           #

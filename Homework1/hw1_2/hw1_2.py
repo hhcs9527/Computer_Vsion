@@ -48,7 +48,7 @@ def process_one_image(img_path, pattern):
                     -0.5625, 1.6328, -0.0469, 
                     -0.0703, 0.2188, 0.6406])
     ccm = np.reshape(ccm, (3, 3))
-    ccm = ccm / np.tile(np.sum(ccm, axis=1), [3, 1]).T
+    ccm = (ccm / np.tile(np.sum(ccm, axis=1), [3, 1]).T).T
     ccm_inv = np.linalg.inv(np.copy(ccm))
 
     #### Not Fixed Parameters
@@ -67,7 +67,7 @@ def process_one_image(img_path, pattern):
     #                                                            # 
     ##############################################################
 
-    img = cv2.imread(img_path) 
+    img = cv2.imread(img_path) # It's a RGB picture
     img_gt = img
     np.array(img, dtype='uint8')
     #### Normalize the value from [0, 255] to [0, 1]
@@ -135,7 +135,6 @@ if __name__ == '__main__':
     
     for idx in range(img_num):
         img_path = os.path.join(img_folder_path, str(idx+1)+'.png')
-        print(img_path)
 
         for pattern_index in range(4):
             ##############################################################
