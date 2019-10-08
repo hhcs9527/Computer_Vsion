@@ -46,7 +46,7 @@ def gaussian_smooth(path, size, var, choose):
 
 if __name__ == "__main__":
     # where workflow should do
-    size = 10
+    size = 5
     var = 5
     path = 'original.jpg'
     choose = 0
