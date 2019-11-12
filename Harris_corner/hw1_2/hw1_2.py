@@ -53,10 +53,10 @@ def process_one_image(img_path, pattern):
 
     #### Not Fixed Parameters
     #### You can use the following random code to fit other images
-    # tone_index = random.randint(0, 200)
-    # fr = random.uniform(0.75, 1)
-    # fb = random.uniform(0.75, 1)
-    tone_index = 170  
+    tone_index = random.randint(0, 200)
+    fr = random.uniform(0.75, 1)
+    fb = random.uniform(0.75, 1)
+    tone_index = 170
     fr = 0.7715567349551743
     fb = 0.9068480239589546
     
@@ -85,7 +85,7 @@ def process_one_image(img_path, pattern):
 
     #print("1. Inverse Tone Mapping")
     img = tone_mapping(img, I_inv, B_inv, index=tone_index, inv=True)
-    
+   
     #print("2. from RGB to CIE XYZ")
     img = RGB2XYZ(img)
 
@@ -98,7 +98,7 @@ def process_one_image(img_path, pattern):
     #print("5: Inverse AWB")
     wb_mask = generate_wb_mask(img, pattern, fr, fb)
     img = img * wb_mask
-    
+    cv2.imwrite('RAW.jpg', img*255)
     ##############################################################
     #                                                            #
     #                         ISP Process                        #
@@ -109,20 +109,25 @@ def process_one_image(img_path, pattern):
     wb_mask = generate_wb_mask(img, pattern, 1/fr, 1/fb)
     img = img * wb_mask
     img = np.clip(img, 0, 1)
+    cv2.imwrite('AWB.jpg', img*255)
 
     # #print("2. Demosaic")
     img = demosaic(img, pattern=pattern)
+    cv2.imwrite('Demosaic.jpg', img*255)
 
     # #print("3. Color Correction")
     img = color_correction(img, ccm_inv)
+    cv2.imwrite('Color_Correction.jpg', img*255)
 
     # #print("4. from XYZ to RGB")
     img = XYZ2RGB(img)
+    cv2.imwrite('CIE_XYZ2RGB.jpg', img*255)
 
     # #print("5. Tone Mapping")
     img = tone_mapping(img, I, B, index=tone_index, inv=False)
     
     img = RGB2BGR(img) * 255.0
+    cv2.imwrite('Tone_Mapping.jpg', img)
     
     return img_gt, img
     

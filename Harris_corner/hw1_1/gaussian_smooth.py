@@ -2,6 +2,7 @@ import cv2
 import numpy as np 
 import math
 import convolution as con
+
 def Guassian(x, y, var):
     return (1/(2*math.pi*var*var))*math.exp(-(x*x+y*y)/(2*var*var))
 
@@ -26,10 +27,12 @@ def gaussian_smooth(path, size, var, choose):
     (h, w) = img.shape[:2]
     center = (w / 2, h / 2)
     
+    # Rotate 30
     if choose == 1:
         M = cv2.getRotationMatrix2D(center, 30, scale = 1.0)
         img_result = cv2.warpAffine(img, M, (h, w))
 
+    # Scale 0.5
     elif  choose == 2:
         M = cv2.getRotationMatrix2D(center, 0, scale = 0.5)
         img_result = cv2.warpAffine(img, M, (h, w))
@@ -38,7 +41,7 @@ def gaussian_smooth(path, size, var, choose):
         
     # get Guassian Kernel
     kernel = Guassian_kernel(size, var)
-    result = con.guassian_convolution2D(img_result, kernel).astype(np.float32) #cv2.filter2D(img_result, -1, kernel, anchor=(-1,-1))
+    result = cv2.filter2D(img_result, -1, kernel, anchor=(-1,-1)) # con.guassian_convolution2D(img_result, kernel).astype(np.float32) 
     
     return result
     
@@ -46,7 +49,7 @@ def gaussian_smooth(path, size, var, choose):
 
 if __name__ == "__main__":
     # where workflow should do
-    size = 5
+    size = 10
     var = 5
     path = 'original.jpg'
     choose = 0
